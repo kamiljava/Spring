@@ -45,5 +45,8 @@ public class Post {
         this.category = category;
         this.user = user;
     }
+    public String getUser(){
+        return user.getName();
+    }
     }
 
