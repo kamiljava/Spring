@@ -25,5 +25,21 @@ public class MainService {
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
+    public Long countAllUsers(){
+        return userRepository.count();
+    }
+    public void updateUserStatus(Long id) {
+        //select
+        User user = userRepository.getOne(id);
+        user.setActive(!user.getActive());
+        //Update
+        userRepository.save(user);
+    }
+    public User loginUser(String email,String password){
+        return userRepository.findByEmailAndPassword(email,password);
+    }
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 
 }

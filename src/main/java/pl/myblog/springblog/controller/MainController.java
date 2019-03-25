@@ -32,9 +32,30 @@ public class MainController {
     public User getUserByEmail(@PathVariable("email") String email){
         return mainService.getUserByEmail(email);
     }
-    //Moja wersja
+    //inna wersja
     @GetMapping("/email")
     public User getUserByEmail() {
-        return mainService.getUserByEmail("kamil@kamil.pl");
+        return mainService.getUserByEmail("robert@rob.pl");
+    }
+    @GetMapping("/users/count")
+    public Long countAllUser(){
+        return mainService.countAllUsers();
+    }
+    @GetMapping("/users/update/{id}")
+    public String updateUser(@PathVariable("id")Long id){
+        mainService.updateUserStatus(id);
+        return "Status zmieniony";
+    }
+    @GetMapping("/login/{email}/{password}")
+    public String loginCheck(
+        @PathVariable("email") String email,
+        @PathVariable("password") String password){
+        User user = mainService.loginUser(email,password);
+        return (user != null) ? user.toString() : "Błąd logowania";
+    }
+    @GetMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable("id")Long id) {
+        mainService.deleteUser(id);
+        return "Użytkownik usunięty";
     }
 }
