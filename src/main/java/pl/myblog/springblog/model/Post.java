@@ -2,6 +2,9 @@ package pl.myblog.springblog.model;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -10,7 +13,10 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+//@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Post {
 
@@ -32,4 +38,12 @@ public class Post {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
-}
+
+    public Post(@NotNull String title, @NotNull String content, PostCategory category, User user) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.user = user;
+    }
+    }
+
