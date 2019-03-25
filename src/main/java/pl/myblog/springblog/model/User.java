@@ -26,7 +26,7 @@ public class User {
     @Email
     private String email;
     @Length(min = 6)
-    @Pattern(regexp = "([A-Z]+.*[0-9]+|[0-9]+.*[A-Z])")  //ustawienie regexpa co najmniej jedna litera i jedna cyfra
+    //@Pattern(regexp = "([A-Z]+.*[0-9]+|[0-9]+.*[A-Z])")  //ustawienie regexpa co najmniej jedna litera i jedna cyfra
     private String password;
     private Boolean active = true;
     private LocalDateTime registered_data = LocalDateTime.now();

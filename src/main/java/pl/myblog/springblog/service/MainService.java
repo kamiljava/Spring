@@ -21,5 +21,9 @@ public class MainService {
     public List<User>getAllUsers(){
         return userRepository.findAll();    // select*from user;      SPRING-obsluga baz danych
     }
+    //end-point zwracajacy uzytkowniaka po emailu
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
 
 }
