@@ -36,6 +36,7 @@ public class PostService {
         Post updatePost = postRepository.getOne(id);
         updatePost.setTitle(post.getTitle());
         updatePost.setContent(post.getContent());
+        updatePost.setCategory(post.getCategory());
         return postRepository.save(updatePost);
     }
 

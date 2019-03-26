@@ -79,6 +79,17 @@
               <p class="help-block text-danger"></p>
             </div>
           </div>
+          <div class="control-group">      <!--class="control-group"-->
+            <div class="form-group floating-label-form-group controls" >
+              <!--<label>Category</label>-->
+              <select th:field="*{category}">
+                <option th:each="c : ${categories}"
+                        th:value="${categories.get(c.ordinal())}"
+                        th:text="${c.name()}">
+                </option>
+              </select>
+            </div>
+          </div>
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label>Content</label>
@@ -89,7 +100,7 @@
           <br>
           <div id="success"></div>
           <div class="form-group">
-            <button type="submit" class="btn btn-primary" id="sendMessageButton">update</button>
+            <button type="submit" class="btn btn-warning float-right" id="sendMessageButton">update</button>
           </div>
         </form>
       </div>
@@ -144,5 +155,3 @@
 <script src="../js/clean-blog.min.js"></script>
 
 </body>
-
-</html>

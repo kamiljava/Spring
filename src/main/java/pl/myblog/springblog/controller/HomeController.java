@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.myblog.springblog.model.Post;
+import pl.myblog.springblog.model.PostCategory;
 import pl.myblog.springblog.service.PostService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,8 +57,10 @@ public class HomeController {
     }
     @GetMapping("/updatepost/{id}")
     public String updatePost(@PathVariable("id") Long id, Model model){
+        List<PostCategory> categories = new ArrayList<>(Arrays.asList(PostCategory.values()));
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
+        model.addAttribute("categories", categories);
         return "updatePost";
     }
     @PostMapping("/allposts/{id}")
