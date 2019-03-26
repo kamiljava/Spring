@@ -31,8 +31,8 @@ public class Post {
     @Enumerated
     private PostCategory category;
     private LocalDateTime date_added = LocalDateTime.now();
-
-    @ManyToOne
+    
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,8 +45,8 @@ public class Post {
         this.category = category;
         this.user = user;
     }
-    public String getUser(){
-        return user.getName();
-    }
+   // public String getUser(){
+     //   return user.getName();
+    //}
     }
 
