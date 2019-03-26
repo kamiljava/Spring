@@ -31,7 +31,8 @@ public class Post {
     @Enumerated
     private PostCategory category;
     private LocalDateTime date_added = LocalDateTime.now();
-    
+    //fetchtype.lazy dane zostana odczytane z bazy dopiero w momencie gdy nastapi odwolanie do obiektu
+    //fetchtype.eager pobierz w momencie wykonywania zapytania
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
