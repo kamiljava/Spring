@@ -21,14 +21,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotNull
+    //@NotNull
     private String name;
-    @NotNull
+    //@NotNull
     private String lastname;
-    @NotNull
-    @Email
+    //@NotNull
+    //@Email
     private String email;
-    @Length(min = 6)
+    //@Length(min = 6)
     //@Pattern(regexp = "([A-Z]+.*[0-9]+|[0-9]+.*[A-Z])")  //ustawienie regexpa co najmniej jedna litera i jedna cyfra
     private String password;
     private Boolean active = true;
