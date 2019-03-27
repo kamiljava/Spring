@@ -9,12 +9,10 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class PostDto {
-    @NotBlank
+    @NotBlank(message = "Enter Title")
     private String title;
-    @NotBlank
+    @NotBlank(message = "Enter text in your post")
     private String content;
     @Enumerated
     private PostCategory category;
-
-
 }

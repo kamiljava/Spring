@@ -65,10 +65,7 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <div class="post-heading">
-          <h1 class="text-center" th:text="${post.getTitle()}" >title</h1>
-          <span th:text="${post.getUser().getName()+ ' ' + post.getUser().getLastname()}" class="meta">author</span>
-          <span th:text="${post.getCategory()}" class="meta">category</span>
-          <span th:text="${post.getDate_added() + ' '}" class="meta">date</span>
+          <h1>Create new post</h1>
         </div>
       </div>
     </div>
@@ -78,8 +75,43 @@
 <article>
   <div class="container">
     <div class="row">
-      <div th:text="${post.getContent()}" class="col-lg-8 col-md-10 mx-auto">
-        content
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <!--FORMULARZ Z CONTACT-->
+        <form th:action="@{/addpost}" th:method="post" th:object="${post}" name="sentMessage" id="contactForm" novalidate>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Title</label>
+              <input th:field="*{title}" type="text" class="form-control" placeholder="Name" id="name" required data-validation-required-message="Please enter a title.">
+              <span th:errors="*{title}">error-message</span>
+            </div>
+          </div>
+          <div class="control-group">      <!--class="control-group"-->
+            <div class="form-group floating-label-form-group controls" >
+              <!--<label>Category</label>-->
+              <select class="font-weight-bolder" th:field="*{category}">
+                <option class="font-weight-bolder" th:each="c : ${categories}"
+                        th:value="${categories.get(c.ordinal())}"
+                        th:text="${c.name()}">
+                </option>
+              </select>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Content</label>
+              <textarea th:field="*{content}" rows="5" class="form-control" placeholder="Message" id="message" required data-validation-required-message="Please enter a content."></textarea>
+              <span th:errors="*{content}">error-message</span>
+            </div>
+          </div>
+          <br>
+          <div id="success"></div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-warning btn-block" id="sendMessageButton">create</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -39,10 +39,19 @@
             <a class="nav-link" th:href="@{/}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/addpost}">Sample Post</a>
+            <a class="nav-link" th:href="@{/addpost}">Add Post</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" th:href="@{/contact}">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/register}">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:if="${auth == null}" th:href="@{/login}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:if="${auth != null}" th:href="@{/logout}">Logout</a>
           </li>
         </ul>
       </div>
@@ -56,7 +65,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>Contact Me</h1>
+            <h1 class="text-center">Contact Me</h1>
             <span class="subheading">Have questions? I have answers.</span>
           </div>
         </div>

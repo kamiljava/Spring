@@ -4,6 +4,8 @@ package pl.myblog.springblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.myblog.springblog.model.Post;
+import pl.myblog.springblog.model.User;
+import pl.myblog.springblog.model.dto.PostDto;
 import pl.myblog.springblog.repository.PostRepository;
 import pl.myblog.springblog.repository.UserRepository;
 
@@ -39,5 +41,17 @@ public class PostService {
         updatePost.setCategory(post.getCategory());
         return postRepository.save(updatePost);
     }
-
+    // metoda zapisująca post zalogowanego użytkownika w DB
+    public Post createPostByUser(PostDto postDto, String email){
+        // wyszukaj użytkownika po adresie email
+        User user = userRepository.findByEmail(email);
+        // Towrzymy obiekt posta
+        Post post = new Post(
+                postDto.getTitle(),
+                postDto.getContent(),
+                postDto.getCategory(),
+                user
+        );
+        return postRepository.save(post);
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -16,6 +18,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    PasswordEncoder bCryptPasswordEncoder;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -24,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // .hasAnyAuthority("uprawnienie") -> dla określonego uprawnienia
                 .antMatchers("/deletepost/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/updatepost/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/addpost/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 // pozostałe URL udostępnij dla każdego
                 .anyRequest().permitAll()
                 .and()
@@ -53,9 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // SQL dla przypisania uprawnień dla zalogowanego użytkownika
                 .authoritiesByUsernameQuery("SELECT u.email, r.role FROM user u JOIN user_role ur ON ur.user_id = u.id JOIN role r ON ur.role_id = r.id WHERE u.email = ?")
                 // wynik logowania
-                .dataSource(dataSource);
-        // szyfrowanie hasła
-//                .passwordEncoder(bCryptPasswordEncoder);
+                .dataSource(dataSource)
+                // szyfrowanie hasła
+                .passwordEncoder(bCryptPasswordEncoder);
     }
 
 }

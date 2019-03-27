@@ -2,6 +2,7 @@ package pl.myblog.springblog.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.myblog.springblog.model.User;
 import pl.myblog.springblog.model.dto.UserDto;
@@ -26,7 +27,10 @@ public class UserService {
         user.setName(userDto.getName());
         user.setLastname(userDto.getLastname());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        //Szyfrowanie hasła
+        String encodedPassword = new BCryptPasswordEncoder().encode(userDto.getPassword());
+        //Wpisujemy zakodowane haslo
+        user.setPassword(encodedPassword);
         //ustawienie roli
         user.addRole(roleRepository.getOne((long) 1));
         return userRepository.save(user);
