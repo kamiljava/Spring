@@ -15,6 +15,7 @@ import pl.myblog.springblog.model.Post;
 import pl.myblog.springblog.model.PostCategory;
 import pl.myblog.springblog.model.dto.PostDto;
 import pl.myblog.springblog.service.PostService;
+import pl.myblog.springblog.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,10 +26,14 @@ import java.util.stream.Collectors;
 @Controller
 public class HomeController {
     PostService postService;
+    UserService userService;
+
     @Autowired
-    public HomeController(PostService postService) {
+    public HomeController(PostService postService, UserService userService) {
         this.postService = postService;
+        this.userService = userService;
     }
+
     @GetMapping("/")                                            // mapowany adres
     public String home(Model model, Authentication auth){                            // nazwa metody wywoływanej dla URL "/"
         List<Post> posts = postService.getAllPosts();
@@ -38,6 +43,13 @@ public class HomeController {
                 .collect(Collectors.toList());                                          // zapis do kolekcji posortowanych postów
         model.addAttribute("posts", sortedPosts);
         model.addAttribute("auth",auth);
+
+        if (auth!=null){
+            model.addAttribute("isAdmin", userService.isAdmin(auth));
+            model.addAttribute("user", userService.getUserById(auth));
+        }else {
+            model.addAttribute("isAdmin",false);
+        }
         return "index";         // nazwa zwracanego widoku HTML
 
     }
