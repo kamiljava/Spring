@@ -49,5 +49,8 @@ public class User {
     public void addPost(Post post) {
         this.posts.add(post);
     }
+    public void addRole(Role role){
+        this.roles.add(role);
+    }
 
 }
