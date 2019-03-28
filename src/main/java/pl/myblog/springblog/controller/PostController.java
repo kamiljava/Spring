@@ -1,6 +1,5 @@
 package pl.myblog.springblog.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import pl.myblog.springblog.model.Comment;
 import pl.myblog.springblog.model.Post;
 import pl.myblog.springblog.model.PostCategory;
+import pl.myblog.springblog.model.User;
+import pl.myblog.springblog.model.dto.CommentDto;
 import pl.myblog.springblog.model.dto.PostDto;
 import pl.myblog.springblog.service.PostService;
 import pl.myblog.springblog.service.UserService;
@@ -24,16 +26,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class HomeController {
+public class PostController {
     PostService postService;
     UserService userService;
-
     @Autowired
-    public HomeController(PostService postService, UserService userService) {
+    public PostController(PostService postService, UserService userService) {
         this.postService = postService;
         this.userService = userService;
     }
-
     @GetMapping("/")                                            // mapowany adres
     public String home(Model model, Authentication auth){                            // nazwa metody wywoływanej dla URL "/"
         List<Post> posts = postService.getAllPosts();
@@ -43,12 +43,11 @@ public class HomeController {
                 .collect(Collectors.toList());                                          // zapis do kolekcji posortowanych postów
         model.addAttribute("posts", sortedPosts);
         model.addAttribute("auth",auth);
-
-        if (auth!=null){
+        if(auth != null) {
             model.addAttribute("isAdmin", userService.isAdmin(auth));
             model.addAttribute("user", userService.getUserById(auth));
-        }else {
-            model.addAttribute("isAdmin",false);
+        } else {
+            model.addAttribute("isAdmin", false);
         }
         return "index";         // nazwa zwracanego widoku HTML
 
@@ -61,8 +60,54 @@ public class HomeController {
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         model.addAttribute("auth",auth);
+        User user = userService.getUserById(auth);
+        String loggedName = user.getName();
+        model.addAttribute("loggedName",loggedName);
+        model.addAttribute("isAdmin", auth != null ? userService.isAdmin(auth) : false);
+        // wypisz komentarze dla danego posta
+        List<Comment> comments = postService.getCommentByPostId(id);
+        System.out.println("Komentarze: "+ comments);
+        model.addAttribute("comments", comments);
+        // dla zalogowanych przypisane jest imię
+        CommentDto commmentDto = new CommentDto();
+        if(auth != null){
+            String name = userService.getUserById(auth).getName();
+            commmentDto.setAuthor(name);
+        }
+        // obiekt comment do formularza
+        model.addAttribute("comment", commmentDto);
         return "post";
     }
+    @GetMapping("/deletecomment/{id}")
+    public String deleteComment(@PathVariable("id") Long id){
+        // wyszukaj komentarz po id
+        Comment deletedComment = postService.getCommentById(id);
+        // zwróć obiekt posta dla usuwanego komntarza
+        Post post = deletedComment.getPost();
+        // usuwanie komentarza
+        postService.deleteCommentById(id);
+        return "redirect:/allposts/"+post.getId();
+    }
+
+    @PostMapping("/addcomment/{id}")
+    public String addComment(@PathVariable("id") Long id_post,
+                             @ModelAttribute("comment") @Valid CommentDto commentDto,
+                             BindingResult bindingResult,
+                             Model model,
+                             Authentication auth){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("auth",auth);
+            List<Comment> comments = postService.getCommentByPostId(id_post);
+            System.out.println("Komentarze: "+ comments);
+            model.addAttribute("comments", comments);
+            model.addAttribute("post",postService.getPostById(id_post));
+            return "post";
+        }
+        // zapis komentarza przez serwis
+        postService.addCommnetToPost(id_post, commentDto);
+        return "redirect:/allposts/"+id_post;
+    }
+
     @GetMapping("/deletepost/{id}")
     public String deletePost(@PathVariable("id") Long id, Authentication auth, Model model){
         // usunięcie posta
@@ -119,12 +164,5 @@ public class HomeController {
                 postService.createPostByUser(postDto,loggedEmail));
         model.addAttribute("auth",auth);
         return "redirect:/";
-    }
-
-
-    @GetMapping("/contact")
-    public String contact(Model model, Authentication auth){
-        model.addAttribute("auth",auth);
-        return "contact";
     }
 }

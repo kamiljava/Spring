@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+                http.authorizeRequests()
                 // tutaj są URL wymagające autoryzacji - strefa chroniona
                 // .antMatchers(/url) -> wymaga autoryzacji
                 // .hasAnyAuthority("uprawnienie") -> dla określonego uprawnienia
@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
+                auth
                 .jdbcAuthentication()
                 // SQL dla logowania użytkownika po adresie email i haśle
                 .usersByUsernameQuery("SELECT u.email, u.password, u.active FROM user u WHERE u.email = ?")

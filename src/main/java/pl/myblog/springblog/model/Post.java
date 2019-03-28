@@ -33,11 +33,11 @@ public class Post {
     private LocalDateTime date_added = LocalDateTime.now();
     //fetchtype.lazy dane zostana odczytane z bazy dopiero w momencie gdy nastapi odwolanie do obiektu
     //fetchtype.eager pobierz w momencie wykonywania zapytania
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
     public Post(@NotNull String title, @NotNull String content, PostCategory category, User user) {
@@ -46,6 +46,11 @@ public class Post {
         this.category = category;
         this.user = user;
     }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+}
+
    // public String getUser(){
      //   return user.getName();
     //}
