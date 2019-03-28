@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.myblog.springblog.model.dto.ContactDto;
+import pl.myblog.springblog.service.AutoMailingService;
 import pl.myblog.springblog.service.ContactService;
 
 import javax.validation.Valid;
@@ -16,11 +17,14 @@ import javax.validation.Valid;
 @Controller
 public class ContactController {
     private ContactService contactService;
+    private AutoMailingService autoMailingService;
     private Boolean sent = false;
     @Autowired
-    public ContactController(ContactService contactService) {
+    public ContactController(ContactService contactService, AutoMailingService autoMailingService) {
         this.contactService = contactService;
+        this.autoMailingService = autoMailingService;
     }
+
     @GetMapping("/contact")
     public String contact(Model model, Authentication auth){
         model.addAttribute("auth",auth);
@@ -41,6 +45,9 @@ public class ContactController {
         // zapis do DB
         contactService.addContact(contactDto);
         sent = true;
+        autoMailingService.sendSimpleMessage(contactDto.getEmail(),
+                "Potwierdzenie wysłania wiadomości",
+                "Dziękujemy za  wysłania formularza");
         return "redirect:/contact";
     }
 }
