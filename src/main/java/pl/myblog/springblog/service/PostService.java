@@ -48,6 +48,7 @@ public class PostService {
         updatePost.setTitle(post.getTitle());
         updatePost.setContent(post.getContent());
         updatePost.setCategory(post.getCategory());
+        updatePost.setComments(updatePost.getComments());
         return postRepository.save(updatePost);
     }
     // metoda zapisująca post zalogowanego użytkownika w DB

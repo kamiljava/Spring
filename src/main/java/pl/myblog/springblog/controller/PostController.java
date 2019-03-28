@@ -60,7 +60,7 @@ public class PostController {
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         model.addAttribute("auth",auth);
-        User user = userService.getUserById(auth);
+        User user = auth != null ? userService.getUserById(auth) : new User();
         String loggedName = user.getName();
         model.addAttribute("loggedName",loggedName);
         model.addAttribute("isAdmin", auth != null ? userService.isAdmin(auth) : false);
@@ -78,6 +78,32 @@ public class PostController {
         model.addAttribute("comment", commmentDto);
         return "post";
     }
+    @PostMapping("/allposts/{id}")
+    public String updatedPost(@ModelAttribute @Valid Post post, Model model, Authentication auth){
+        // zapis przez serwis
+        Long id = post.getId();
+        Post updatedPost = postService.updatePost(id, post);
+        model.addAttribute("post", updatedPost);
+        model.addAttribute("auth",auth);
+        User user = auth != null ? userService.getUserById(auth) : new User();
+        String loggedName = user.getName();
+        model.addAttribute("loggedName",loggedName);
+        model.addAttribute("isAdmin", auth != null ? userService.isAdmin(auth) : false);
+        // wypisz komentarze dla danego posta
+        List<Comment> comments = postService.getCommentByPostId(id);
+        System.out.println("Komentarze: "+ comments);
+        model.addAttribute("comments", comments);
+        // dla zalogowanych przypisane jest imię
+        CommentDto commmentDto = new CommentDto();
+        if(auth != null){
+            String name = userService.getUserById(auth).getName();
+            commmentDto.setAuthor(name);
+        }
+        // obiekt comment do formularza
+        model.addAttribute("comment", commmentDto);
+
+        return "post";
+    }
     @GetMapping("/deletecomment/{id}")
     public String deleteComment(@PathVariable("id") Long id){
         // wyszukaj komentarz po id
@@ -86,7 +112,7 @@ public class PostController {
         Post post = deletedComment.getPost();
         // usuwanie komentarza
         postService.deleteCommentById(id);
-        return "redirect:/allposts/"+post.getId();
+        return "forward:/allposts/"+post.getId();
     }
 
     @PostMapping("/addcomment/{id}")
@@ -124,15 +150,7 @@ public class PostController {
         model.addAttribute("auth",auth);
         return "updatePost";
     }
-    @PostMapping("/allposts/{id}")
-    public String updatedPost(@ModelAttribute @Valid Post post, Model model, Authentication auth){
-        // zapis przez serwis
-        Long id = post.getId();
-        Post updatedPost = postService.updatePost(id, post);
-        model.addAttribute("post", updatedPost);
-        model.addAttribute("auth",auth);
-        return "post";
-    }
+
 
     @GetMapping("/addpost")
     public String addPost(Model model, Authentication auth){
