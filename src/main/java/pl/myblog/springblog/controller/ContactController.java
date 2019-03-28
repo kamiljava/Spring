@@ -15,31 +15,32 @@ import javax.validation.Valid;
 
 @Controller
 public class ContactController {
-
-    ContactService contactService;
+    private ContactService contactService;
+    private Boolean sent = false;
     @Autowired
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
     }
-
     @GetMapping("/contact")
     public String contact(Model model, Authentication auth){
         model.addAttribute("auth",auth);
-        model.addAttribute("contact",new ContactDto());
+        model.addAttribute("contact", new ContactDto());
+        model.addAttribute("sent", sent);
         return "contact";
     }
-
     @PostMapping("/contact")
     public String contact(@ModelAttribute("contact") @Valid ContactDto contactDto,
                           BindingResult bindingResult,
                           Model model,
                           Authentication auth){
         model.addAttribute("auth",auth);
-        if (bindingResult.hasErrors()){
+        model.addAttribute("sent", sent);
+        if(bindingResult.hasErrors()){
             return "contact";
         }
-        //zapis do db
+        // zapis do DB
         contactService.addContact(contactDto);
+        sent = true;
         return "redirect:/contact";
     }
 }

@@ -8,11 +8,12 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class ContactDto {
-    @NotBlank
+    @NotBlank(message = "Enter your name")
     private String name;
     @Email
+    @NotBlank(message = "Enter you email")
     private String email;
     private String phone;
-    @NotBlank
+    @NotBlank(message = "Enter message")
     private String message;
 }
