@@ -47,7 +47,7 @@ public class ContactController {
         sent = true;
         autoMailingService.sendSimpleMessage(contactDto.getEmail(),
                 "Potwierdzenie wysłania wiadomości",
-                "Dziękujemy za  wysłania formularza");
+                "Dziękujemy za wysłania formularza");
         return "redirect:/contact";
     }
 }
