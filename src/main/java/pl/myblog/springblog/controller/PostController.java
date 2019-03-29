@@ -20,9 +20,7 @@ import pl.myblog.springblog.service.PostService;
 import pl.myblog.springblog.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +40,13 @@ public class PostController {
                 .sorted((p1, p2) -> p2.getDate_added().compareTo(p1.getDate_added()))   // sortowanie po dacie DESC
                 .collect(Collectors.toList());                                          // zapis do kolekcji posortowanych postów
         model.addAttribute("posts", sortedPosts);
+        //-------------ZBIÓR KATEGORII---------------------
+        Set<PostCategory> tags = new HashSet<>();
+        for(Post p : sortedPosts){
+            tags.add(p.getCategory());
+        }
+        model.addAttribute("tags",tags);
+        //--------------------------------------------------
         model.addAttribute("auth",auth);
         if(auth != null) {
             model.addAttribute("isAdmin", userService.isAdmin(auth));
